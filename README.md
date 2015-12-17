@@ -1,2 +1,4 @@
-# crossplatform-example
-Quick example of cross-platform cookbook.
+# python
+
+TODO: Enter the cookbook description here.
+

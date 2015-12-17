@@ -1,0 +1,7 @@
+DEPENDENCIES
+  python
+    path: .
+    metadata: true
+
+GRAPH
+  python (0.1.0)
