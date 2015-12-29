@@ -12,5 +12,5 @@ end
 ::Chef::Recipe.send(:include, MyProcess::Helper)
 ::Chef::Recipe.send(:include, MyApplication::Helper)
 
-# Do stuff..
+# Do Windowsy stuff..
 Chef::Log.warn "Installing Windows python.." if ! is_process_running?('python.exe')
