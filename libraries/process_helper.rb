@@ -1,6 +1,8 @@
-require 'Win32API' if Chef::Platform.windows?
-require 'win32/registry' if Chef::Platform.windows?
-require 'win32ole' if Chef::Platform.windows?
+if Chef::Platform.windows?
+  require 'Win32API'
+  require 'win32/registry'
+  require 'win32ole'
+end
 
 module MyProcess
   module Helper
