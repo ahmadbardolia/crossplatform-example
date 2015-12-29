@@ -48,7 +48,7 @@ Since cookbook libraries are just ruby and they have access to the Chef namespac
 Thus our cookbook's library require statements change to this:
 
 ```
-require 'win32/registry' Chef::Platform.windows?
+require 'win32/registry' if Chef::Platform.windows?
 require 'win32ole' if Chef::Platform.windows?
 ```
 
