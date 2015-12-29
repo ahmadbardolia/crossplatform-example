@@ -90,6 +90,6 @@ end
 
 ::Chef::Recipe.send(:include, MyLib::Helper)
 
-# Do stuff..
+# Do Windowsy stuff..
 Chef::Log.warn "Installing Windows python.." if ! is_process_running?('python.exe')
 ```
