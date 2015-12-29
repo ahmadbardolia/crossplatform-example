@@ -26,6 +26,7 @@ module MyLib
   end
 end
 ```
+When Chef attempts to converge the node (run the compile then execution stages), the compile phase fails since the required ruby libraries do not exist on the system.
 
 ```
 Compiling Cookbooks...
@@ -39,8 +40,6 @@ LoadError
 cannot load such file -- win32/registry
 cannot load such file -- win32ole
 ```
-
-When Chef attempts to converge the node (run the compile then execution stages), the compile phase fails since the required ruby libraries do not exist on the system.
 
 ## Solution Patterns
 
