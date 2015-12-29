@@ -1,9 +1,9 @@
+require 'Win32API' if Chef::Platform.linux?
+require 'win32/registry' if Chef::Platform.windows?
+require 'win32ole' if Chef::Platform.windows?
+
 module MyProcess
   module Helper
-
-    if RUBY_PLATFORM =~ /mswin|mingw32|windows/
-      require 'win32ole'
-    end
 
     def is_process_running?(process_name)
       return false
