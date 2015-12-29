@@ -1,7 +1,7 @@
 # Cross Platform Cookbook Development
 
 ## Synopsis of Problem
-Cookbook metadata.rb does not provide a way to optionally depend on another cookbook based upon its platform architecture.  Thus is it tempting to write platform specific cookbooks and use other logic to affect inclusion of the cookbook in a node's run_list.
+Cookbook metadata.rb does not provide a way to optionally depend on another cookbook based upon its platform architecture.  Thus is it tempting to write platform specific cookbooks and use other logic to affect inclusion of the patfrom specific cookbook in a node's run_list.
 
 ## Example Scenario
 Often as you write cookbooks for your organization you may encounter a situation where the initial target scope of infrastructure platform changes. For instance, perhaps initially your entire environment was comprised of Windows nodes but now you're adding Linux systems to the environment. You have a couple of options:
@@ -41,15 +41,55 @@ cannot load such file -- win32ole
 
 As the node attempts to converge (compile then execution stage), the compile phase fails since the required ruby libraries do not exist on the system.
 
-## Solutions
+## Solution Patterns
 
 Since cookbook libraries are just ruby and they have access to the Chef namespace including helper functions, we can leverage platform detection logic and wrap the problem areas in conditional statements.
 
-Thus are require statements change to this:
+Thus our cookbook's library require statements change to this:
 
 ```
 require 'win32/registry' Chef::Platform.windows?
 require 'win32ole' if Chef::Platform.windows?
 ```
 
-This simple pattern allows the compile phase to complete successfully and the execution phase begins.
+This simple pattern allows the compile phase to complete successfully and the execution phase begins. With this practice we can now leverage one library cookbook for multiple node architectures.
+
+To ease the ongoing maintenance of the cookbook it is additionally a good practice to avoid having all your logic and code in just one or two recipes.  Treating recipes like you would Class files helps group your code into functional chunks and greatly improves readability and usability.
+
+This is where you can break apart your Chef code into platform specific sections, using recipes like so:
+
+```
+#
+# Cookbook Name:: myOrgPython
+# Recipe:: install
+
+# Install it
+case node['platform']
+when 'debian', 'ubuntu'
+  include_recipe 'myOrgPython::install-debian'
+when 'redhat', 'centos', 'fedora'
+  include_recipe 'myOrgPython::install-rhel'
+when 'windows'
+  include_recipe 'myOrgPython::install-windows'
+end
+
+```
+
+You can ensure that recipes do not get included and executed on the incorrect platform architecture like so:
+
+```
+#
+# Cookbook Name:: myOrgPython
+# Recipe:: install-windows
+#
+
+if ! platform?('windows')
+  Chef::Log.warn "[python::install-windows] unsupported platform family: #{node[:platform_family]}"
+  return
+end
+
+::Chef::Recipe.send(:include, MyLib::Helper)
+
+# Do stuff..
+Chef::Log.warn "Installing Windows python.." if ! is_process_running?('python.exe')
+```
