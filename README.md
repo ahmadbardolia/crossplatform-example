@@ -63,7 +63,7 @@ This is where you can break apart your Chef code into platform specific sections
 # Cookbook Name:: myOrgPython
 # Recipe:: install
 
-# Install it
+# Decide how to install it
 case node['platform']
 when 'debian', 'ubuntu'
   include_recipe 'myOrgPython::install-debian'
