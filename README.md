@@ -11,7 +11,7 @@ Often as you write cookbooks for your organization you may encounter a situation
 
 Since cookbook duplication (inadvertent or purposeful duplication) can lead to maintenance nightmares, poor factoring, and logical contradictions (see [DRY](http://c2.com/cgi/wiki?DontRepeatYourself)), the second option is superior in most cases.
 
-However, this option can present an immediate problem if your existing Windows library cookbook contains a library like this and you attempt to include the cookbook in a Linux node's run_list:
+However, this option can present an immediate problem if your existing Windows library cookbook contains a require statement like this and you attempt to include the cookbook in a Linux node's run_list:
 
 ```
 # libraries/process_helper.rb
@@ -36,10 +36,11 @@ Recipe Compile Error in libraries/process_helper.rb
 
 LoadError
 ---------
+cannot load such file -- win32/registry
 cannot load such file -- win32ole
 ```
 
-As the node attempts to converge (compile then execution stage), the compile phase fails since the required ruby libraries do not exist on the system.
+When Chef attempts to converge the node (run the compile then execution stages), the compile phase fails since the required ruby libraries do not exist on the system.
 
 ## Solution Patterns
 
@@ -75,7 +76,7 @@ end
 
 ```
 
-You can ensure that recipes do not get included and executed on the incorrect platform architecture like so:
+Finally, you can ensure that recipes do not get included and executed on the incorrect platform architecture like this:
 
 ```
 #
